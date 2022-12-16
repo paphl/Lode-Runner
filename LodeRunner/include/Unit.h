@@ -55,7 +55,7 @@ class Unit
 		void setPosition(sf::Vector2f position);
 		bool isColliding(sf::FloatRect fr);
 		sf::Vector2f getPosition();
-		bool GravityPull(std::vector<Tile*> tiles);
+		bool GravityPull(std::vector<Tile*>& tiles);
 		bool getIsFalling();
 		void setIsFalling(bool isFalling);
 

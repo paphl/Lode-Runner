@@ -85,10 +85,10 @@ sf::Vector2f Unit::getPosition()
 bool Unit::isColliding(sf::FloatRect fr)
 {
 	sf::FloatRect collisionRect = sprite.getGlobalBounds();
-	collisionRect.top -= 2.5;
-	collisionRect.height += 2.5;
-	collisionRect.left -= 2.5;
-	collisionRect.width += 2.5;
+	collisionRect.top -= 1.0f;
+	collisionRect.height += 1.0f;
+	collisionRect.left -= 1.0f;
+	collisionRect.width += 1.0f;
 	if (collisionRect.intersects(fr))
 	{
 		return true;
@@ -96,11 +96,11 @@ bool Unit::isColliding(sf::FloatRect fr)
 	return false;
 }
 
-bool Unit::GravityPull(std::vector<Tile*> tiles)
+bool Unit::GravityPull(std::vector<Tile*>& tiles)
 {
 	for (int i = 0; i < tiles.size(); i++)
 	{
-		if (this->isColliding(tiles[i]->getGlobalBounds()))
+		if (this->isColliding(tiles[i]->getGlobalBounds()) && !(tiles[i]->getTileType() == "Gold") && !(tiles[i]->getTileType() == "Rope"))
 		{
 			return true;
 		}

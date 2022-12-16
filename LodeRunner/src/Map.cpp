@@ -129,8 +129,7 @@ void Map::HandleInput()
 			{
 				if ((*ptrTiles)->getTileType() == "Ladder")
 				{
-					bool test = hero->isColliding((*ptrTiles)->getGlobalBounds());
-					if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && hero->getPosition().x  > (*ptrTiles)->getPosition().x - 15.0f && hero->getPosition().x < (*ptrTiles)->getPosition().x + 15.0f)
+					if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && hero->getPosition().x  > (*ptrTiles)->getPosition().x - 6.0f && hero->getPosition().x < (*ptrTiles)->getPosition().x + 6.0f)
 					{
 						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 						{
@@ -160,32 +159,49 @@ void Map::HandleInput()
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
 			std::vector<Tile*>::iterator ptrTiles;
-			dir.x -= 2.5f;
-			float heroLeftBound = hero->getGlobalBounds().left - hero->getGlobalBounds().width - 2.5f;
+			dir.x -= 3.0f;
 
 			for ( ptrTiles = tiles.begin(); ptrTiles < tiles.end(); ptrTiles++)
-			{
-				if (heroLeftBound <= (*ptrTiles)->getGlobalBounds().left  && 
-					hero->getGlobalBounds().top >= (*ptrTiles)->getGlobalBounds().top && 
-					hero->getGlobalBounds().top <= (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height && 
-					(*ptrTiles)->getIsBlocking())
+			{	
+				if (hero->isColliding((*ptrTiles)->getGlobalBounds())  && (*ptrTiles)->getIsBlocking())
 				{
-					dir.x = 0.0f;
+					if (hero->getGlobalBounds().left  <= (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width &&
+						hero->getGlobalBounds().left + hero->getGlobalBounds().width >= (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width
+						) //check if hero enter
+					{
+						if ((hero->getGlobalBounds().top > (*ptrTiles)->getGlobalBounds().top &&
+							hero->getGlobalBounds().top < (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height) ||
+							(hero->getGlobalBounds().top + hero->getGlobalBounds().height -3.0f > (*ptrTiles)->getGlobalBounds().top &&
+							hero->getGlobalBounds().top + hero->getGlobalBounds().height <= (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height))
+						{
+							dir.x = 0.0f;
+						}
+					}
 				}
+				
+					
 			}
 
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
 			std::vector<Tile*>::iterator ptrTiles;
-			dir.x += 2.5f;
+			dir.x += 3.0f;
 			float heroLeftBound = hero->getGlobalBounds().left + hero->getGlobalBounds().width + 2.5f;
 
 			for (ptrTiles = tiles.begin(); ptrTiles < tiles.end(); ptrTiles++)
 			{
-				if (heroLeftBound <= (*ptrTiles)->getGlobalBounds().left && (*ptrTiles)->getIsBlocking())
+				if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getIsBlocking())
 				{
-					dir.x = 0.0f;
+					if (hero->getGlobalBounds().left  >= (*ptrTiles)->getGlobalBounds().left - (*ptrTiles)->getGlobalBounds().width &&
+						hero->getGlobalBounds().left - hero->getGlobalBounds().width < (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width) //check if hero enter
+						if ((hero->getGlobalBounds().top > (*ptrTiles)->getGlobalBounds().top &&
+							hero->getGlobalBounds().top < (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height) ||
+							(hero->getGlobalBounds().top + hero->getGlobalBounds().height - 3.0f > (*ptrTiles)->getGlobalBounds().top &&
+							hero->getGlobalBounds().top + hero->getGlobalBounds().height  <= (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height))
+						{
+							dir.x = 0.0f;
+						}
 				}
 			}
 		}
