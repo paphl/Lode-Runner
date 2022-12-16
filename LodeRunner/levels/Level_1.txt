@@ -1,0 +1,13 @@
+    $             h         
+XXXXXXXHXXXXXXX   h         
+       H~~~~~~~~~~h    $    
+       H    XXH   XXXXXXXHXX
+     - H    XXH       $- H  
+XXHXXXXX    XXXXXXXXHXXXXXXX
+  H           -     H       
+XXXXXXXXXHXXXXXXXXXXH       
+         H          H       
+       $ H~~~~~~~~~~H   $   
+    HXXXXXX         XXXXXXXH
+    H     +      $         H
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
