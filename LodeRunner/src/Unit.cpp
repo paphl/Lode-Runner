@@ -85,10 +85,10 @@ sf::Vector2f Unit::getPosition()
 bool Unit::isColliding(sf::FloatRect fr)
 {
 	sf::FloatRect collisionRect = sprite.getGlobalBounds();
-	collisionRect.top -= 2;
-	collisionRect.height += 2;
-	collisionRect.left -= 2;
-	collisionRect.width += 2;
+	collisionRect.top -= 2.5;
+	collisionRect.height += 2.5;
+	collisionRect.left -= 2.5;
+	collisionRect.width += 2.5;
 	if (collisionRect.intersects(fr))
 	{
 		return true;

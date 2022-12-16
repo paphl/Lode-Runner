@@ -107,6 +107,7 @@ void Map::Draw(float dt)
 void Map::HandleInput()
 {
 	sf::Event event;
+	float heroLeftBound; //used for left and right collision check
 
 	while (this->_data->window.pollEvent(event))
 	{	
@@ -158,11 +159,35 @@ void Map::HandleInput()
 		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
+			std::vector<Tile*>::iterator ptrTiles;
 			dir.x -= 2.5f;
+			float heroLeftBound = hero->getGlobalBounds().left - hero->getGlobalBounds().width - 2.5f;
+
+			for ( ptrTiles = tiles.begin(); ptrTiles < tiles.end(); ptrTiles++)
+			{
+				if (heroLeftBound <= (*ptrTiles)->getGlobalBounds().left  && 
+					hero->getGlobalBounds().top >= (*ptrTiles)->getGlobalBounds().top && 
+					hero->getGlobalBounds().top <= (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height && 
+					(*ptrTiles)->getIsBlocking())
+				{
+					dir.x = 0.0f;
+				}
+			}
+
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
-			dir.x += 2.5f;	
+			std::vector<Tile*>::iterator ptrTiles;
+			dir.x += 2.5f;
+			float heroLeftBound = hero->getGlobalBounds().left + hero->getGlobalBounds().width + 2.5f;
+
+			for (ptrTiles = tiles.begin(); ptrTiles < tiles.end(); ptrTiles++)
+			{
+				if (heroLeftBound <= (*ptrTiles)->getGlobalBounds().left && (*ptrTiles)->getIsBlocking())
+				{
+					dir.x = 0.0f;
+				}
+			}
 		}
 		
 		hero->SetDirection(dir);
@@ -176,26 +201,25 @@ void Map::Update(float dt)
 {
 
 
-	sf::Vector2f dir = { 0.0f, 0.0f };
+	sf::Vector2f dirs = { 0.0f, 0.0f };
 	std::vector<std::unique_ptr<Unit>>::iterator ptrUnits;
 	for (ptrUnits = units.begin(); ptrUnits < units.end(); ptrUnits++)
 	{
 		(*ptrUnits)->Update(dt);
 		if (!(*ptrUnits)->GravityPull(tiles))
 		{
-			dir.y += 1.0f;
-			(*ptrUnits)->SetDirection(dir);
+			dirs.y += 1.0f;
+			(*ptrUnits)->SetDirection(dirs);
 			(*ptrUnits)->setIsFalling(true);
 		}
 		else
 		{
-			dir.y += 0.0f;
-			(*ptrUnits)->SetDirection(dir);
+			dirs.y += 0.0f;
+			(*ptrUnits)->SetDirection(dirs);
 			(*ptrUnits)->setIsFalling(false);
 		}
 	}
 	hero->Update(dt); //update before unit before gravity takes effect
-	dir = { 0.0f, 0.0f };
 	//simulates falling if obj isnt collinding with any tile
 	sf::Vector2f dir = { 0.0f, 0.0f };
 	if (!hero->GravityPull(tiles))

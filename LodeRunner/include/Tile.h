@@ -33,6 +33,11 @@ class Tile
 
 		virtual std::string getTileType() = 0;
 
+		const bool  getIsBlocking()
+		{
+			return canDestroy;
+		}
+
     protected:
 		static constexpr int nFrames = 4;
         sf::Vector2f position;
