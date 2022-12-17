@@ -58,10 +58,13 @@ class Unit
 		bool GravityPull(std::vector<Tile*>& tiles);
 		bool getIsFalling();
 		void setIsFalling(bool isFalling);
-
 		sf::FloatRect getGlobalBounds() const
 		{
 			return sprite.getGlobalBounds();
+		}
+		void setPos(float x = 0, float y = 0)
+		{
+			this->pos = sf::Vector2f(x, y);
 		}
     protected:
 		static constexpr float speed = 100.0f;
