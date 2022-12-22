@@ -96,7 +96,8 @@ void Map::Draw(float dt)
 	std::vector<Tile*>::iterator ptrTiles;
 	for (ptrTiles = tiles.begin(); ptrTiles < tiles.end(); ptrTiles++)
 	{
-		(*ptrTiles)->Draw(this->_data->window);
+		if((*ptrTiles)->getIsVisible()) // draw the tile when isVisible is true 
+			(*ptrTiles)->Draw(this->_data->window);
 	}
 
 	hero->Draw(this->_data->window);
@@ -250,6 +251,7 @@ void Map::Update(float dt)
 			(*ptrUnits)->SetDirection(dirs);
 			(*ptrUnits)->setIsFalling(false);
 		}
+		(*ptrUnits)->pickUpGold(tiles); //checks if unit while moving picks up any gold
 	}
 	hero->Update(dt); //update before unit before gravity takes effect
 	//simulates falling if obj isnt collinding with any tile
@@ -266,6 +268,8 @@ void Map::Update(float dt)
 		hero->SetDirection(dir);
 		hero->setIsFalling(false);
 	}
+
+	hero->pickUpGold(tiles);//hero if unit while moving picks up any gold
 
 	UpdateView(dt); //always after updating the hero
 

@@ -20,3 +20,17 @@ void Hero::Disintegrate()
 {
 	curAnimation = AnimationIndex::Disintegrate;
 }
+
+void Hero::pickUpGold(std::vector<Tile*>& tiles)
+{
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		if (tiles[i]->getTileType() == "Gold" && this->isColliding(tiles[i]->getGlobalBounds()) && tiles[i]->getIsVisible())
+		{
+			goldCounter++;
+			tiles[i]->setIsVisible(false);
+			//hide the gold sprite
+			//gold sprite drops when trapped by unit and is put on top of the enemy
+		}
+	}
+}

@@ -9,6 +9,7 @@ class Hero : public Unit
 		Hero(const sf::Vector2f& position);
 		std::unique_ptr<Unit> clone() override;
 		void Disintegrate() override;
+		void pickUpGold(std::vector<Tile*>& tiles) override;
     private:
 
 };

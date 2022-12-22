@@ -58,6 +58,7 @@ class Unit
 		bool GravityPull(std::vector<Tile*>& tiles);
 		bool getIsFalling();
 		void setIsFalling(bool isFalling);
+		virtual void pickUpGold(std::vector<Tile*>& tiles) = 0;
 		sf::FloatRect getGlobalBounds() const
 		{
 			return sprite.getGlobalBounds();
@@ -72,6 +73,7 @@ class Unit
 		sf::Vector2f vel = { 0.0f, 0.0f };
 		sf::Sprite sprite;
 		bool isFalling = false;
+		int goldCounter = 0;
 		//sf::FloatRect collisionRect;
 		AnimateUnit animations[int(AnimationIndex::Count)];
 		AnimationIndex curAnimation = AnimationIndex::WalkingLeft;

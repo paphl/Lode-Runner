@@ -11,33 +11,14 @@ class Tile
         virtual void init(float xPos, float yPos);
         void Draw(sf::RenderTarget& window);
 
-        sf::Vector2f getPosition()
-        {
-            return position;
-        }
-        void setPosition(sf::Vector2f pos)
-        {
-			sprite.setPosition(pos);
-            position = pos;
-        }
-
-		const float  getSize()
-		{
-			return sprite.getGlobalBounds().width;
-		}
-
-		sf::FloatRect getGlobalBounds() const 
-		{
-			return sprite.getGlobalBounds();
-		}
-
+		sf::Vector2f getPosition();
+		void setPosition(sf::Vector2f pos);
+		const float  getSize();
+		sf::FloatRect getGlobalBounds() const;
 		virtual std::string getTileType() = 0;
-
-		const bool  getIsBlocking()
-		{
-			return canDestroy;
-		}
-
+		const bool  getIsBlocking();
+		bool getIsVisible();
+		void setIsVisible(bool isVis);
     protected:
 		static constexpr int nFrames = 4;
         sf::Vector2f position;
@@ -45,6 +26,7 @@ class Tile
         std::shared_ptr<sf::Texture> texture;
         bool canDestroy;
 		bool isBlocking = false; //false if the unit can pass through the specific tile
+		bool isVisible = true;
 
 };
 
@@ -139,6 +121,11 @@ public:
 	}
 
 	std::string getTileType()
+	{
+		return "Gold";
+	}
+
+	std::string get1()
 	{
 		return "Gold";
 	}

@@ -89,11 +89,8 @@ bool Unit::isColliding(sf::FloatRect fr)
 	collisionRect.height += 1.5f;
 	collisionRect.left -= 1.5f;
 	collisionRect.width += 1.5f;
-	if (collisionRect.intersects(fr))
-	{
-		return true;
-	}
-	return false;
+
+	return collisionRect.intersects(fr);
 }
 
 bool Unit::GravityPull(std::vector<Tile*>& tiles)
@@ -116,3 +113,5 @@ void Unit::setIsFalling(bool isFalling)
 {
 	this->isFalling = isFalling;
 }
+
+
