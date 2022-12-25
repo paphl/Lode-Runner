@@ -275,7 +275,12 @@ void Map::Update(float dt)
 
 	//end of hero falling 
 
-
+	std::vector<Tile*>::iterator ptrTiles;
+	for (ptrTiles = tiles.begin(); ptrTiles < tiles.end(); ptrTiles++)
+	{
+		if ((*ptrTiles)->getIsVisible() && (*ptrTiles)->getTileType() == "Gold") // draw the tile when isVisible is true 
+			(*ptrTiles)->Update(dt);
+	}
 }
 
 void Map::UpdateView(float dt)

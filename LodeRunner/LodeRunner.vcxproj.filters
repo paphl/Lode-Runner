@@ -57,6 +57,12 @@
     <ClInclude Include="include\SplashState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\AnimateUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AnimateTile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hero.cpp">
@@ -102,6 +108,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SplashState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AnimateUnit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AnimateTile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

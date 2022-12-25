@@ -4,6 +4,7 @@
 
 #include "ResourceHolder.h"
 #include "FilePaths.h"
+#include "AnimateTile.h"
 
 class Tile
 {
@@ -15,19 +16,20 @@ class Tile
 		void setPosition(sf::Vector2f pos);
 		const float  getSize();
 		sf::FloatRect getGlobalBounds() const;
-		virtual std::string getTileType() = 0;
 		const bool  getIsBlocking();
 		bool getIsVisible();
 		void setIsVisible(bool isVis);
+		std::string getTileType();
+		void Update(float dt);
     protected:
-		static constexpr int nFrames = 4;
         sf::Vector2f position;
         sf::Sprite sprite;
         std::shared_ptr<sf::Texture> texture;
         bool canDestroy;
+		std::string type;
 		bool isBlocking = false; //false if the unit can pass through the specific tile
 		bool isVisible = true;
-
+		AnimateTile animation;
 };
 
 class Dirt: public Tile
@@ -36,17 +38,16 @@ class Dirt: public Tile
         void init(float xPos, float yPos)
         {
 			Tile::init(xPos, yPos);
-			sprite.setTexture(*texture);
+			/*sprite.setTexture(*texture);
 			sprite.setTextureRect({ 0,0,Constants::I_16,Constants::I_16 });
-			sprite.setScale(4.0f, 4.0f);
+			sprite.setScale(4.0f, 4.0f);*/
+			type = "Dirt";
+			animation = AnimateTile(0,0, Constants::Unit_Size, Constants::Unit_Size,type);
+			animation.ApplyToSprite(this->sprite);
             canDestroy = true;
 			isBlocking = true;
         }
 
-		std::string getTileType()
-		{
-			return "Dirt";
-		}
 };
 
 class Stone: public Tile
@@ -56,17 +57,17 @@ class Stone: public Tile
         {
                 //set tile size and texture
 			Tile::init(xPos, yPos);
-			sprite.setTexture(*texture);
+			/*sprite.setTexture(*texture);
 			sprite.setTextureRect({ Constants::I_16,0,Constants::I_16,Constants::I_16 });
-			sprite.setScale(4.0f, 4.0f);
+			sprite.setScale(4.0f, 4.0f);*/
+			type = "Stone";
+			animation = AnimateTile(Constants::Unit_Size, 0, Constants::Unit_Size, Constants::Unit_Size, type);
+			animation.ApplyToSprite(this->sprite);
+
             canDestroy = false;
 			isBlocking = true;
         }
 
-		std::string getTileType()
-		{
-			return "Stone";
-		}
 };
 
 class Ladder : public Tile
@@ -76,16 +77,16 @@ class Ladder : public Tile
         {
                 //set tile size and texture
 			Tile::init(xPos, yPos);
-			sprite.setTexture(*texture);
+			/*sprite.setTexture(*texture);
 			sprite.setTextureRect({ Constants::I_16*2, 0,Constants::I_16,Constants::I_16 });
-			sprite.setScale(4.0f, 4.0f);
+			sprite.setScale(4.0f, 4.0f);*/
+			type = "Ladder";
+			animation = AnimateTile(Constants::Unit_Size * 2, 0, Constants::Unit_Size, Constants::Unit_Size, type);
+			animation.ApplyToSprite(this->sprite);
+
             canDestroy = false;
         }
 
-		std::string getTileType()
-		{
-			return "Ladder";
-		}
 };
 
 class Rope: public Tile
@@ -95,16 +96,16 @@ class Rope: public Tile
         {
                 //set tile size and texture
 			Tile::init(xPos, yPos);
-			sprite.setTexture(*texture);
+			/*sprite.setTexture(*texture);
 			sprite.setTextureRect({ Constants::I_16*3,0,Constants::I_16,Constants::I_16 });
-			sprite.setScale(4.0f, 4.0f);
+			sprite.setScale(4.0f, 4.0f);*/
+			type = "Rope";
+			animation = AnimateTile(Constants::I_16 * 3, 0, Constants::I_16, Constants::I_16, type);
+			animation.ApplyToSprite(this->sprite);
+
             canDestroy = false;
         }
 
-		std::string getTileType()
-		{
-			return "Rope";
-		}
 };
 
 class Gold : public Tile
@@ -114,20 +115,15 @@ public:
 	{
 		//set tile size and texture
 		Tile::init(xPos, yPos);
-		sprite.setTexture(*texture);
+		/*sprite.setTexture(*texture);
 		sprite.setTextureRect({ Constants::I_16*6,0,Constants::I_16,Constants::I_16 });
-		sprite.setScale(4.0f, 4.0f);
+		sprite.setScale(4.0f, 4.0f);*/
+		type = "Gold";
+		animation = AnimateTile(Constants::I_16 * 6, 0, Constants::I_16, Constants::I_16, type);
+		animation.ApplyToSprite(this->sprite);
+
 		canDestroy = false;
 	}
 
-	std::string getTileType()
-	{
-		return "Gold";
-	}
-
-	std::string get1()
-	{
-		return "Gold";
-	}
 };
 #endif // TILE_H

@@ -6,8 +6,9 @@
 
 #include "FilePaths.h"
 #include "ResourceHolder.h"
+#include "AnimateUnit.h"
 #include "Tile.h"
-
+/*
 class AnimateUnit {
 public:
 	AnimateUnit() = default;
@@ -31,7 +32,7 @@ private:
 	int iFrame = 0; //index of current frame
 	float time = 0.0f; //track time elapsed till text animation
 };
-
+*/
 class Unit
 {
 	protected:

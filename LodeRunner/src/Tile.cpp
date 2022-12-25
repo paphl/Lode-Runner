@@ -7,9 +7,16 @@ void Tile::Draw(sf::RenderTarget& window)
 
 void Tile::init(float xPos, float yPos)
 {
-    position = sf::Vector2f(xPos,yPos);
+    /*
 	texture =  ResourceHolder::Acquire(Texture_Paths::Tileset);
-    sprite.setPosition(position);
+    sprite.setPosition(position);*/
+
+	position = sf::Vector2f(xPos, yPos);
+
+	sprite.setTextureRect({ 0,0,64,64 });
+	sprite.setScale(4.0f, 4.0f);
+	sprite.setPosition(position);
+
 }
 
 sf::Vector2f Tile::getPosition()
@@ -45,4 +52,15 @@ bool Tile::getIsVisible()
 void Tile::setIsVisible(bool isVis)
 {
 	isVisible = isVis;
+}
+
+std::string Tile::getTileType()
+{
+	return type;
+}
+
+void Tile::Update(float dt)
+{
+	animation.Update(dt);
+	animation.ApplyToSprite(sprite);
 }

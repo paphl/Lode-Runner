@@ -1,29 +1,5 @@
 #include "..\include\Unit.h"
 
-AnimateUnit::AnimateUnit(int x, int y, int width, int height)
-{
-
-	texture = ResourceHolder::Acquire(Texture_Paths::Characters);
-
-	for (int i = 0; i < nFrames; i++)
-	{
-		frames[i] = { x + i*width, y,  width,  height};
-	}
-}
-
-void AnimateUnit::ApplyToSprite(sf::Sprite& s) const
-{
-	s.setTexture(*texture);
-	s.setTextureRect(frames[iFrame]);
-}
-
-void AnimateUnit::Advance()
-{
-	if (++iFrame >= nFrames)
-	{
-		iFrame = 0;
-	}
-}
 
 Unit::Unit(const sf::Vector2f& position)
 {
@@ -109,6 +85,7 @@ bool Unit::getIsFalling()
 {
 	return isFalling;
 }
+
 void Unit::setIsFalling(bool isFalling)
 {
 	this->isFalling = isFalling;

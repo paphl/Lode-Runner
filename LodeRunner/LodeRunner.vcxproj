@@ -135,6 +135,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\AnimateTile.h" />
+    <ClInclude Include="include\AnimateUnit.h" />
     <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\FilePaths.h" />
     <ClInclude Include="include\Game.h" />
@@ -152,6 +154,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\AnimateTile.cpp" />
+    <ClCompile Include="src\AnimateUnit.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Hero.cpp" />
