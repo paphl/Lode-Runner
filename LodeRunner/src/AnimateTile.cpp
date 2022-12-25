@@ -21,7 +21,7 @@ AnimateTile::AnimateTile(int x, int y, int width, int height, std::string type)
 		frames.push_back({ x, y,  width,  height });
 		y += height;
 
-		for (int i = 2; i < nFrames; i++)
+		for (int i = 2; i <= nFrames; i++)
 		{
 			frames.push_back({ x + temp*width, y,  width,  height });
 			temp = i % 2;
@@ -56,4 +56,14 @@ void AnimateTile::Advance()
 	{
 		iFrame = 0;
 	}
+}
+
+void AnimateTile::setFrame(int frame)
+{
+	iFrame = frame;
+}
+
+int AnimateTile::getFrame()
+{
+	return iFrame;
 }

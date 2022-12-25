@@ -110,19 +110,24 @@ void Map::HandleInput()
 	sf::Event event;
 	float heroLeftBound; //used for left and right collision check
 
+	if (hero->getIsFalling())
+	{
+		return;
+	}
+
 	while (this->_data->window.pollEvent(event))
 	{	
-		if (hero->getIsFalling())
-		{
-			return;
-		}
+	
 		if (sf::Event::Closed == event.type)
 		{
 			this->_data->window.close();
 		}
 		sf::Vector2f dir = { 0.0f, 0.0f }; // used to move hero
+		
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
 			//to be tested
 			std::vector<Tile*>::iterator ptrTiles;
@@ -173,7 +178,7 @@ void Map::HandleInput()
 			
 		}
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
 			std::vector<Tile*>::iterator ptrTiles;
 			dir.x -= 2.0f;
@@ -200,7 +205,8 @@ void Map::HandleInput()
 			}
 
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
 			std::vector<Tile*>::iterator ptrTiles;
 			dir.x += 2.0f;
@@ -223,11 +229,28 @@ void Map::HandleInput()
 			}
 		}
 		
-		hero->SetDirection(dir);
+			hero->SetDirection(dir);
+			isDigging = false;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+			{
+				
+				digDir = DIG_DIRECTION::LEFT;
+				posX = hero->getGlobalBounds().left;
+			}
+			else
+			{
+				digDir = DIG_DIRECTION::RIGHT;
+				posX = hero->getGlobalBounds().left + hero->getGlobalBounds().width;
+
+			}
+			isDigging = true;
+
+		}
+
 	}
-
-
-
 }
 
 void Map::Update(float dt)
@@ -280,6 +303,49 @@ void Map::Update(float dt)
 	{
 		if ((*ptrTiles)->getIsVisible() && (*ptrTiles)->getTileType() == "Gold") // draw the tile when isVisible is true 
 			(*ptrTiles)->Update(dt);
+
+		if (isDigging)
+		{
+			if ((*ptrTiles)->getTileType() == "Dirt" && hero->getGlobalBounds().top + hero->getGlobalBounds().height / 2 < (*ptrTiles)->getGlobalBounds().top &&
+				(*ptrTiles)->getGlobalBounds().top < hero->getGlobalBounds().top + hero->getGlobalBounds().height * 3 / 2)
+			{
+				//enter only if the tiles are exactly below the the hero unit x coord
+				if (digDir == DIG_DIRECTION::LEFT && (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width / 2 < posX &&
+					posX <= (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width + 10)
+				{
+					(*ptrTiles)->Update(dt);
+					if ((*ptrTiles)->getFrame() == 10)
+					{
+						(*ptrTiles)->setIsVisible(false);
+						diggedTiles.push_back((*ptrTiles));
+						timerDiggedTiles.push_back(sf::Clock());
+
+					}
+					
+				}
+			}
+
+		}
+		else {
+			if ((*ptrTiles)->getTileType() == "Dirt")
+			{
+				(*ptrTiles)->setFrame(0);
+			}
+		}
+		
+	}
+
+
+	for (int i = 0; i < timerDiggedTiles.size(); i++)
+	{
+		if (timerDiggedTiles[i].getElapsedTime() > sf::seconds(5))
+		{
+			diggedTiles[i]->setIsVisible(true);
+			diggedTiles[i]->setFrame(0);
+			diggedTiles.erase(diggedTiles.begin() + i);
+			timerDiggedTiles.erase(timerDiggedTiles.begin() + i);
+			//
+		}
 	}
 }
 

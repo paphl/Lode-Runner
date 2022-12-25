@@ -64,3 +64,14 @@ void Tile::Update(float dt)
 	animation.Update(dt);
 	animation.ApplyToSprite(sprite);
 }
+
+void Tile::setFrame(int frame)
+{
+	this->animation.setFrame(frame);
+	animation.ApplyToSprite(sprite);
+}
+
+int Tile::getFrame()
+{
+	return this->animation.getFrame();
+}

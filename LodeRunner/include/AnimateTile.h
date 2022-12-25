@@ -21,10 +21,12 @@ public:
 			Advance();
 		}
 	}
+	void setFrame(int frame);
+	int getFrame();
 private:
 	void Advance();
 	int nFrames = 0;
-	static constexpr float holdTime = 0.3f; //time a frame will be on  screen
+	static constexpr float holdTime = 0.09f; //time a frame will be on  screen
 	std::shared_ptr<sf::Texture> texture;
 	std::vector<sf::IntRect> frames;
 	int iFrame = 0; //index of current frame

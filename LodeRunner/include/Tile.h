@@ -21,6 +21,8 @@ class Tile
 		void setIsVisible(bool isVis);
 		std::string getTileType();
 		void Update(float dt);
+		void setFrame(int frame);
+		int getFrame();
     protected:
         sf::Vector2f position;
         sf::Sprite sprite;
