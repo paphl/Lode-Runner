@@ -173,7 +173,14 @@ void Map::HandleInput()
 						return;
 					}
 				}
-				
+				if ((*ptrTiles)->getTileType() == "Rope" && hero->isColliding((*ptrTiles)->getGlobalBounds()))
+				{
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+					{
+						hero->setOnRope(false);
+					}
+			
+				}
 			}
 			
 		}
@@ -226,6 +233,16 @@ void Map::HandleInput()
 							dir.x = 0.0f;
 						}
 				}
+
+				if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
+				{
+					hero->setOnRope(true);
+					break;
+				}
+
+				if(hero->getOnRope()) {
+					hero->setOnRope(false);
+				}
 			}
 		}
 		
@@ -237,12 +254,12 @@ void Map::HandleInput()
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
 			{
 				
-				digDir = DIG_DIRECTION::LEFT;
+				digDir = Constants::DIG_DIRECTION::LEFT;
 				posX = hero->getGlobalBounds().left;
 			}
 			else
 			{
-				digDir = DIG_DIRECTION::RIGHT;
+				digDir = Constants::DIG_DIRECTION::RIGHT;
 				posX = hero->getGlobalBounds().left + hero->getGlobalBounds().width;
 
 			}
@@ -279,7 +296,7 @@ void Map::Update(float dt)
 	hero->Update(dt); //update before unit before gravity takes effect
 	//simulates falling if obj isnt collinding with any tile
 	sf::Vector2f dir = { 0.0f, 0.0f };
-	if (!hero->GravityPull(tiles))
+	if (!hero->GravityPull(tiles) && !hero->getOnRope())
 	{
 		dir.y += 1.0f;
 		hero->SetDirection(dir);
@@ -310,9 +327,11 @@ void Map::Update(float dt)
 				(*ptrTiles)->getGlobalBounds().top < hero->getGlobalBounds().top + hero->getGlobalBounds().height * 3 / 2)
 			{
 				//enter only if the tiles are exactly below the the hero unit x coord
-				if (digDir == DIG_DIRECTION::LEFT && (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width / 2 < posX &&
+				if (digDir == Constants::DIG_DIRECTION::LEFT && (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width / 2 < posX &&
 					posX <= (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width + 10)
-				{
+				{	
+					//same as line 340 move to a method
+					hero->Disintegrate(digDir);
 					(*ptrTiles)->Update(dt);
 					if ((*ptrTiles)->getFrame() == 10)
 					{
@@ -322,6 +341,19 @@ void Map::Update(float dt)
 
 					}
 					
+				} else if(digDir == Constants::DIG_DIRECTION::RIGHT && (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width / 2 > posX &&
+					posX >= (*ptrTiles)->getGlobalBounds().left - 10)
+				{
+					hero->Disintegrate(digDir);
+					(*ptrTiles)->Update(dt);
+					if ((*ptrTiles)->getFrame() == 10)
+					{
+						(*ptrTiles)->setIsVisible(false);
+						diggedTiles.push_back((*ptrTiles));
+						timerDiggedTiles.push_back(sf::Clock());
+
+					}
+
 				}
 			}
 
@@ -381,3 +413,4 @@ void Map::UpdateView(float dt)
 
 	this->_data->window.setView(view);
 }
+

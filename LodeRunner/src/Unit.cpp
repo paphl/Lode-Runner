@@ -20,21 +20,41 @@ void Unit::Draw(sf::RenderTarget& rt) const
 void Unit::SetDirection(const sf::Vector2f& dir)
 {
 	vel = dir * speed;
-	if (dir.x > 0.0f)
+	if (!onRope)
 	{
-		curAnimation = AnimationIndex::WalkingRight;
+		if (dir.x > 0.0f)
+		{
+			curAnimation = AnimationIndex::WalkingRight;
+		}
+		if (dir.x < 0.0f)
+		{
+			curAnimation = AnimationIndex::WalkingLeft;
+		}
 	}
-	if (dir.x < 0.0f)
+	else
 	{
-		curAnimation = AnimationIndex::WalkingLeft;
+		if (dir.x > 0.0f)
+		{
+			curAnimation = AnimationIndex::RopeRight;
+
+		}
+		if (dir.x < 0.0f)
+		{
+			curAnimation = AnimationIndex::RopeLeft;
+		}
 	}
+
 	
-	if (dir.y < 0.0f || dir.y > 0.0f)
+	if ((dir.y < 0.0f || dir.y > 0.0f) && !isFalling)
 	{
 		curAnimation = AnimationIndex::Climb;
 
 	}
 
+	if (dir.y > 0.0f && isFalling)
+	{
+		curAnimation = AnimationIndex::Falling;
+	}
 }
 
 void Unit::Update(float dt)
@@ -58,22 +78,30 @@ sf::Vector2f Unit::getPosition()
 	return pos;
 }
 
-bool Unit::isColliding(sf::FloatRect fr)
+bool Unit::isColliding(sf::FloatRect fr, float precision)
 {
 	sf::FloatRect collisionRect = sprite.getGlobalBounds();
-	collisionRect.top -= 1.5f;
-	collisionRect.height += 1.5f;
-	collisionRect.left -= 1.5f;
-	collisionRect.width += 1.5f;
+	collisionRect.top -= precision;
+	collisionRect.height += precision;
+	collisionRect.left -= precision;
+	collisionRect.width += precision;
 
 	return collisionRect.intersects(fr);
 }
 
 bool Unit::GravityPull(std::vector<Tile*>& tiles)
 {
+	//making small point to the collision to be more precize
+	//sf::FloatRect bottomLeftPoint;
+
+
+	
+//	sf::FloatRect bottomRightPoint;
+	
+
 	for (int i = 0; i < tiles.size(); i++)
 	{
-		if (this->isColliding(tiles[i]->getGlobalBounds()) && !(tiles[i]->getTileType() == "Gold") && !(tiles[i]->getTileType() == "Rope"))
+		if (this->isColliding(tiles[i]->getGlobalBounds(), -4.0f) && !(tiles[i]->getTileType() == "Gold") && !(tiles[i]->getTileType() == "Rope") && tiles[i]->getIsVisible())
 		{
 			return true;
 		}
@@ -92,3 +120,12 @@ void Unit::setIsFalling(bool isFalling)
 }
 
 
+bool Unit::getOnRope()
+{
+	return onRope;
+}
+
+void Unit::setOnRope(bool onRope)
+{
+	this->onRope = onRope;
+}

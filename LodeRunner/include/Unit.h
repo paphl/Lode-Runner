@@ -39,10 +39,13 @@ class Unit
 		enum class AnimationIndex
 		{
 			Climb,
+			RopeLeft,
+			RopeRight,
 			WalkingRight,
 			WalkingLeft,
 			Falling,
-			Disintegrate,
+			DisintegrateLeft,
+			DisintegrateRight,
 			Count
 		};
     public:
@@ -52,9 +55,9 @@ class Unit
 		void Draw(sf::RenderTarget& rt) const;
 		void SetDirection(const sf::Vector2f& dir);
 		void Update(float dt);
-		virtual void Disintegrate() = 0;
+		virtual void Disintegrate(Constants::DIG_DIRECTION dir) = 0;
 		void setPosition(sf::Vector2f position);
-		bool isColliding(sf::FloatRect fr);
+		bool isColliding(sf::FloatRect fr,  float precision = 1.5f);
 		sf::Vector2f getPosition();
 		bool GravityPull(std::vector<Tile*>& tiles);
 		bool getIsFalling();
@@ -68,12 +71,15 @@ class Unit
 		{
 			this->pos = sf::Vector2f(x, y);
 		}
+		bool getOnRope();
+		void setOnRope(bool onRope);
     protected:
 		static constexpr float speed = 100.0f;
 		sf::Vector2f pos;
 		sf::Vector2f vel = { 0.0f, 0.0f };
 		sf::Sprite sprite;
 		bool isFalling = false;
+		bool onRope = false;
 		int goldCounter = 0;
 		//sf::FloatRect collisionRect;
 		AnimateUnit animations[int(AnimationIndex::Count)];

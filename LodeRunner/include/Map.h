@@ -11,11 +11,7 @@
 #include "../src/TileFactory.cpp"
 #include "State.h"
 
-enum DIG_DIRECTION
-{
-	LEFT = 0,
-	RIGHT
-};
+
 
 class Map : public State
 {
@@ -29,7 +25,6 @@ class Map : public State
 		void UpdateView(float dt);
         virtual ~Map();
 		void loadMap();
-
     private:
 		UnitFactory unitFactory;
 		std::vector<std::unique_ptr<Unit>> units;
@@ -42,8 +37,9 @@ class Map : public State
 		std::unique_ptr<Unit> hero;
 		std::ifstream file_;
 		bool isDigging = false;
-		DIG_DIRECTION digDir;
+		Constants::DIG_DIRECTION digDir;
 		float posX; // used for digging 
 		sf::Vector2f mapSize = { 0.0f, 0.0f }; //needed for camera moovement
+		sf::Clock timeForNextMove;
 };
 

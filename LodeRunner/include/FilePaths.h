@@ -38,4 +38,9 @@ namespace Constants
 	#define MENU_POS_Y_Selector 210
 	#define MENU_Size 70
 	const float SIZE_OF_TILE = I_16*4;
+	enum DIG_DIRECTION
+	{
+		LEFT = 0,
+		RIGHT
+	};
 }
