@@ -5,7 +5,7 @@ Unit::Unit(const sf::Vector2f& position)
 {
 	pos = position;
 	
-	
+	clock.restart();
 	sprite.setTextureRect({ 0,0,64,64 });
 	sprite.setScale(4.0f, 4.0f);
 

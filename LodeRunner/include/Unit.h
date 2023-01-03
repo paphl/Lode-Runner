@@ -63,6 +63,8 @@ class Unit
 		bool getIsFalling();
 		void setIsFalling(bool isFalling);
 		virtual void pickUpGold(std::vector<Tile*>& tiles) = 0;
+		virtual void choosePath(std::vector<Tile*>& tiles) = 0;
+
 		sf::FloatRect getGlobalBounds() const
 		{
 			return sprite.getGlobalBounds();
@@ -77,8 +79,11 @@ class Unit
 		static constexpr float speed = 100.0f;
 		sf::Vector2f pos;
 		sf::Vector2f vel = { 0.0f, 0.0f };
+		sf::Vector2f dir = { 0.0f, 0.0f };
 		sf::Sprite sprite;
+		sf::Clock clock;
 		bool isFalling = false;
+		int direction;
 		bool onRope = false;
 		int goldCounter = 0;
 		//sf::FloatRect collisionRect;

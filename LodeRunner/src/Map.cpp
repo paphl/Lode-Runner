@@ -86,18 +86,17 @@ void Map::Draw(float dt)
 
 	this->_data->window.clear();
 
-
-	std::vector<std::unique_ptr<Unit>>::iterator ptrUnits;
-	for (ptrUnits = units.begin(); ptrUnits < units.end(); ptrUnits++)
-	{
-		(*ptrUnits)->Draw(this->_data->window);
-	}
-
 	std::vector<Tile*>::iterator ptrTiles;
 	for (ptrTiles = tiles.begin(); ptrTiles < tiles.end(); ptrTiles++)
 	{
 		if((*ptrTiles)->getIsVisible()) // draw the tile when isVisible is true 
 			(*ptrTiles)->Draw(this->_data->window);
+	}
+
+	std::vector<std::unique_ptr<Unit>>::iterator ptrUnits;
+	for (ptrUnits = units.begin(); ptrUnits < units.end(); ptrUnits++)
+	{
+		(*ptrUnits)->Draw(this->_data->window);
 	}
 
 	hero->Draw(this->_data->window);
@@ -129,7 +128,6 @@ void Map::HandleInput()
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
-			//to be tested
 			std::vector<Tile*>::iterator ptrTiles;
 			for (ptrTiles = tiles.begin(); ptrTiles < tiles.end(); ptrTiles++)
 			{
@@ -278,19 +276,9 @@ void Map::Update(float dt)
 	std::vector<std::unique_ptr<Unit>>::iterator ptrUnits;
 	for (ptrUnits = units.begin(); ptrUnits < units.end(); ptrUnits++)
 	{
+		(*ptrUnits)->choosePath(tiles);
 		(*ptrUnits)->Update(dt);
-		if (!(*ptrUnits)->GravityPull(tiles))
-		{
-			dirs.y += 1.0f;
-			(*ptrUnits)->SetDirection(dirs);
-			(*ptrUnits)->setIsFalling(true);
-		}
-		else
-		{
-			dirs.y += 0.0f;
-			(*ptrUnits)->SetDirection(dirs);
-			(*ptrUnits)->setIsFalling(false);
-		}
+
 		(*ptrUnits)->pickUpGold(tiles); //checks if unit while moving picks up any gold
 	}
 	hero->Update(dt); //update before unit before gravity takes effect

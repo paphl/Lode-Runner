@@ -8,7 +8,7 @@ public:
 	std::unique_ptr<Unit> clone() override;
 	void Disintegrate(Constants::DIG_DIRECTION dir) override  {};
 	void pickUpGold(std::vector<Tile*>& tiles) override;
-
+	void choosePath(std::vector<Tile*>& tiles) override;
 private:
 
 };
