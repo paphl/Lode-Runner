@@ -37,7 +37,8 @@ void Map::loadMap()
 	float posX = 0.0f;
 	Tile* tile;
 	for (ptr = vRow.begin(); ptr < vRow.end(); ptr++)
-	{
+	{	
+		tiles.push_back(TileFactory::createTile(TILE_TYPE::STONE, posX - Constants::SIZE_OF_TILE, posY));
 		for (int i = 0; i < ptr->size(); i++)
 		{
 			switch ((*ptr)[i])
@@ -69,11 +70,16 @@ void Map::loadMap()
 			case 'X':
 				tiles.push_back(TileFactory::createTile(TILE_TYPE::DIRT, posX, posY));
 				break;
+			case '*':
+				tiles.push_back(TileFactory::createTile(TILE_TYPE::STONE, posX, posY));
+				break;
 			default:
 				break;
 			}
 			posX += Constants::SIZE_OF_TILE;
 		}
+		tiles.push_back(TileFactory::createTile(TILE_TYPE::STONE, posX, posY));
+
 		if (posX > mapSize.x)
 		{
 			mapSize.x = posX;
@@ -211,10 +217,19 @@ void Map::HandleInput()
 				
 				if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
 				{
+					hero->setPos(hero->getPosition().x, (*ptrTiles)->getPosition().y);
 					hero->setOnRope(true);
+					hero->SetDirection(dir);
 					break;
 				}
-				else if (hero->getOnRope()) {
+				if (hero->getOnRope()) {
+					for (int i = 0; i < tiles.size(); i++)
+					{
+						if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
+						{
+							return;
+						}
+					}
 					hero->setOnRope(false);
 				}
 			}
@@ -231,8 +246,8 @@ void Map::HandleInput()
 			{
 				if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getIsBlocking())
 				{
-					if (hero->getGlobalBounds().left  >= (*ptrTiles)->getGlobalBounds().left - (*ptrTiles)->getGlobalBounds().width &&
-						hero->getGlobalBounds().left - hero->getGlobalBounds().width < (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width) //check if hero enter
+					if (hero->getGlobalBounds().left + hero->getGlobalBounds().width >= (*ptrTiles)->getGlobalBounds().left &&
+						hero->getGlobalBounds().left + hero->getGlobalBounds().width < (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width/2) //check if hero enter
 						if ((hero->getGlobalBounds().top > (*ptrTiles)->getGlobalBounds().top &&
 							hero->getGlobalBounds().top < (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height) ||
 							(hero->getGlobalBounds().top + hero->getGlobalBounds().height - 3.0f > (*ptrTiles)->getGlobalBounds().top &&
@@ -245,9 +260,19 @@ void Map::HandleInput()
 				if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
 				{
 					hero->setOnRope(true);
+					hero->setPos( hero->getPosition().x, (*ptrTiles)->getPosition().y);
+					hero->SetDirection(dir);
 					break;
 				}
-				else if(hero->getOnRope()) {
+
+				if (hero->getOnRope()) {
+					for (int i = 0; i < tiles.size(); i++)
+					{
+						if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
+						{
+							return;
+						}
+					}
 					hero->setOnRope(false);
 				}
 			}
@@ -284,6 +309,27 @@ void Map::Update(float dt)
 		for (int i = 0; i < ladderToNextLevel.size(); i++)
 		{
 			ladderToNextLevel[i]->setIsVisible(true);
+		}
+
+		if (ladderToNextLevel[0]->getGlobalBounds().top > hero->getGlobalBounds().top &&
+			ladderToNextLevel[0]->getGlobalBounds().left - ladderToNextLevel[0]->getGlobalBounds().width < hero->getGlobalBounds().left &&
+			ladderToNextLevel[0]->getGlobalBounds().left + ladderToNextLevel[0]->getGlobalBounds().width > hero->getGlobalBounds().left)
+		{
+			/*bool posFound = false;
+			for (int i = 0; i < this->_data->allLevels.size(); i++)
+			{
+				if (posFound)
+				{
+					this->_data->path_level = this->_data->allLevels[i];
+					this->_data->machine.AddState(StateRef(new Map(_data)), true);
+					return;
+				}
+				if (this->_data->allLevels[i] == this->_data->path_level)
+				{
+					posFound = true;
+				}
+			}*/
+			this->_data->machine.AddState(StateRef(new LvlSlectionMenuState(_data)), true);
 		}
 	}
 

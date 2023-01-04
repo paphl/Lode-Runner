@@ -97,9 +97,25 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 								this->getGlobalBounds().top + this->getGlobalBounds().height <= (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height))
 						{
 							dir.x = 0.0f;
+						}
+					}
+				}
+
+				if (this->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
+				{
+					this->setOnRope(true);
+					break;
+				}
+				if (this->getOnRope()) {
+					for (int i = 0; i < tiles.size(); i++)
+					{
+						if (this->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
+						{
 							return;
 						}
 					}
+
+					this->setOnRope(false);
 				}
 			}
 		} 
@@ -114,25 +130,33 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 			{
 				if (this->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getIsBlocking())
 				{
-					if (this->getGlobalBounds().left >= (*ptrTiles)->getGlobalBounds().left - (*ptrTiles)->getGlobalBounds().width &&
-						this->getGlobalBounds().left - this->getGlobalBounds().width < (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width) //check if hero enter
+					if (this->getGlobalBounds().left + this->getGlobalBounds().width >= (*ptrTiles)->getGlobalBounds().left &&
+						this->getGlobalBounds().left + this->getGlobalBounds().width < (*ptrTiles)->getGlobalBounds().left + (*ptrTiles)->getGlobalBounds().width / 2) //check if hero enter
 						if ((this->getGlobalBounds().top > (*ptrTiles)->getGlobalBounds().top &&
 							this->getGlobalBounds().top < (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height) ||
 							(this->getGlobalBounds().top + this->getGlobalBounds().height - 3.0f > (*ptrTiles)->getGlobalBounds().top &&
 								this->getGlobalBounds().top + this->getGlobalBounds().height <= (*ptrTiles)->getGlobalBounds().top + (*ptrTiles)->getGlobalBounds().height))
 						{
 							dir.x = 0.0f;
-							return;
 						}
 				}
 
 				if (this->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
 				{
+					this->setPos(this->getPosition().x, (*ptrTiles)->getPosition().y);
 					this->setOnRope(true);
+					this->SetDirection(dir);
 					break;
-				}
-
+				} 
 				if (this->getOnRope()) {
+					for (int i = 0; i < tiles.size(); i++)
+					{
+						if (this->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
+						{
+							return;
+						}
+					}
+
 					this->setOnRope(false);
 				}
 			}
@@ -157,14 +181,12 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 							this->getPosition().x < (*itrTiles)->getPosition().x + 36.0f)
 						{
 							dir.y = 0;
-							return;
 						}
 					}
 
 					if ((int)this->getPosition().y - 2 == (*ptrTiles)->getPosition().y + Constants::SIZE_OF_TILE)
 					{
 						dir.y = 0;
-						return;
 					}
 
 					dir.y += 1.0f;
@@ -173,10 +195,17 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 					return;
 				}
 			}
-			if ((*ptrTiles)->getTileType() == "Rope" && this->isColliding((*ptrTiles)->getGlobalBounds()))
-			{
-				this->setOnRope(false);
-			}
+				if (this->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
+				{
+					this->setPos(this->getPosition().x, (*ptrTiles)->getPosition().y);
+					this->setOnRope(true);
+					this->SetDirection(dir);
+					break;
+				}
+				
+				if (this->getOnRope()) {
+					this->setOnRope(false);
+				}
 		}
 	}
 		else if (direction == 3) //up
@@ -194,7 +223,6 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 						if ((int)this->getPosition().y + 2 == (*ptrTiles)->getPosition().y - Constants::SIZE_OF_TILE)
 						{
 							dir.y = 0;
-							return;
 						}
 						dir.y -= 1.0f;
 					}
@@ -204,6 +232,7 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 		}
 
 	}
+		
 		this->SetDirection(dir);
 
 		if (!this->GravityPull(tiles) && !this->getOnRope())

@@ -14,6 +14,7 @@
 		sf::RenderWindow window;
 		ResourceHolder resources;
 		std::string path_level;
+		std::vector<std::string> allLevels;
 	};
 
 	typedef std::shared_ptr<GameData> GameDataRef;

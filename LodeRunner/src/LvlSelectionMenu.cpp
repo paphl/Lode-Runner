@@ -31,7 +31,7 @@ void LvlSlectionMenuState::Init()
 		btnSprites.back()->setScale(0.6f, 0.6f);
 
 	}
-
+	this->_data->allLevels = allLevelPaths;
 	(*btnSprites[0]).setTextureRect(buttons[1]); //set hightlight the first lvl on initialize
 	
 	int i = 0;
