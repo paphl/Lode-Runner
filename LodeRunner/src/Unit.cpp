@@ -129,3 +129,8 @@ void Unit::setOnRope(bool onRope)
 {
 	this->onRope = onRope;
 }
+
+int Unit::getGoldCounter()
+{
+	return goldCounter;
+}

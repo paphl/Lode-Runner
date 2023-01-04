@@ -9,7 +9,7 @@ Enemy::Enemy(const sf::Vector2f& position) : Unit(position)
 	animations[int(AnimationIndex::Falling)] = AnimateUnit(4 * Constants::Unit_Size, 3 * Constants::Unit_Size, Constants::Unit_Size, Constants::Unit_Size);
 
 	animations[int(AnimationIndex::RopeLeft)] = AnimateUnit(4 * Constants::Unit_Size, 4*Constants::Unit_Size, Constants::Unit_Size, Constants::Unit_Size);
-	animations[int(AnimationIndex::RopeRight)] = AnimateUnit(4 * Constants::Unit_Size, 8 * Constants::Unit_Size, Constants::Unit_Size, Constants::Unit_Size);
+	animations[int(AnimationIndex::RopeRight)] = AnimateUnit(8 * Constants::Unit_Size, 4 * Constants::Unit_Size, Constants::Unit_Size, Constants::Unit_Size);
 	//climb rope to do
 }
 
@@ -20,7 +20,7 @@ std::unique_ptr<Unit> Enemy::clone()
 
 void Enemy::pickUpGold(std::vector<Tile*>& tiles)
 {
-	for (int i = 0; i < tiles.size(); i++)
+	/*for (int i = 0; i < tiles.size(); i++)
 	{
 		if (tiles[i]->getTileType() == "Gold" && this->isColliding(tiles[i]->getGlobalBounds()) && goldCounter < 1 && tiles[i]->getIsVisible())
 		{
@@ -29,7 +29,7 @@ void Enemy::pickUpGold(std::vector<Tile*>& tiles)
 			//hide the gold sprite
 			//gold sprite drops when trapped by unit and is put on top of the enemy
 		}
-	}
+	}*/
 }
 
 void Enemy::choosePath(std::vector<Tile*>& tiles)

@@ -56,9 +56,12 @@ void Map::loadMap()
 				break;
 			case 'h':
 				tiles.push_back(TileFactory::createTile(TILE_TYPE::LADDER, posX, posY));
+				tiles.back()->setIsVisible(false);
+				ladderToNextLevel.push_back(tiles.back());
 				break;
 			case '$':
 				tiles.push_back(TileFactory::createTile(TILE_TYPE::GOLD, posX, posY));
+				goldCounter++;
 				break;
 			case '~':
 				tiles.push_back(TileFactory::createTile(TILE_TYPE::ROPE, posX, posY));
@@ -206,7 +209,14 @@ void Map::HandleInput()
 					}
 				}
 				
-					
+				if (hero->isColliding((*ptrTiles)->getGlobalBounds()) && (*ptrTiles)->getTileType() == "Rope")
+				{
+					hero->setOnRope(true);
+					break;
+				}
+				else if (hero->getOnRope()) {
+					hero->setOnRope(false);
+				}
 			}
 
 		}
@@ -237,8 +247,7 @@ void Map::HandleInput()
 					hero->setOnRope(true);
 					break;
 				}
-
-				if(hero->getOnRope()) {
+				else if(hero->getOnRope()) {
 					hero->setOnRope(false);
 				}
 			}
@@ -270,7 +279,13 @@ void Map::HandleInput()
 
 void Map::Update(float dt)
 {
-
+	if (goldCounter == hero->getGoldCounter())
+	{
+		for (int i = 0; i < ladderToNextLevel.size(); i++)
+		{
+			ladderToNextLevel[i]->setIsVisible(true);
+		}
+	}
 
 	sf::Vector2f dirs = { 0.0f, 0.0f };
 	std::vector<std::unique_ptr<Unit>>::iterator ptrUnits;

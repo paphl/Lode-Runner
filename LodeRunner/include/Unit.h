@@ -64,7 +64,7 @@ class Unit
 		void setIsFalling(bool isFalling);
 		virtual void pickUpGold(std::vector<Tile*>& tiles) = 0;
 		virtual void choosePath(std::vector<Tile*>& tiles) = 0;
-
+		int getGoldCounter();
 		sf::FloatRect getGlobalBounds() const
 		{
 			return sprite.getGlobalBounds();

@@ -26,11 +26,13 @@ class Map : public State
         virtual ~Map();
 		void loadMap();
     private:
+		int goldCounter = 0;
 		UnitFactory unitFactory;
 		std::vector<std::unique_ptr<Unit>> units;
 		std::vector<Tile*> tiles;
 		std::vector<Tile*> diggedTiles;
 		std::vector<sf::Clock> timerDiggedTiles;
+		std::vector<Tile*> ladderToNextLevel;
 		GameDataRef _data;
 		std::vector<std::string> vRow;
 		sf::View view;
