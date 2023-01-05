@@ -61,7 +61,6 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 		}
 		
 	}
-	direction = 3;
 
 	Tile* trapTile = isFallingToTrap(tiles);
 	float del = sf::seconds(4.0f).asSeconds();
