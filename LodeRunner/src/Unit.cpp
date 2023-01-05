@@ -134,3 +134,13 @@ int Unit::getGoldCounter()
 {
 	return goldCounter;
 }
+
+bool Unit::getIsVisible()
+{
+	return isVisible;
+}
+
+void Unit::setIsVisible(bool isVisible)
+{
+	this->isVisible = isVisible;
+}

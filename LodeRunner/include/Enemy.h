@@ -10,6 +10,9 @@ public:
 	void pickUpGold(std::vector<Tile*>& tiles) override;
 	void choosePath(std::vector<Tile*>& tiles) override;
 private:
-
+	bool isTrapped = false;
+	Tile* carriedGold;
+	Tile* isFallingToTrap(std::vector<Tile*>& tiles);
+	sf::Clock timeTrapped;
 };
 

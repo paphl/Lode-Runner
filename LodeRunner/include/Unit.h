@@ -75,6 +75,8 @@ class Unit
 		}
 		bool getOnRope();
 		void setOnRope(bool onRope);
+		bool getIsVisible();
+		void setIsVisible(bool isVisible);
     protected:
 		static constexpr float speed = 100.0f;
 		sf::Vector2f pos;
@@ -86,6 +88,7 @@ class Unit
 		int direction;
 		bool onRope = false;
 		int goldCounter = 0;
+		bool isVisible = true;
 		//sf::FloatRect collisionRect;
 		AnimateUnit animations[int(AnimationIndex::Count)];
 		AnimationIndex curAnimation = AnimationIndex::WalkingLeft;

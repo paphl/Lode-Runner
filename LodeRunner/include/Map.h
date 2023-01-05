@@ -23,7 +23,8 @@ class Map : public State
 		void HandleInput();
 		void Update(float dt);
 		void Draw(float dt);
-		void UpdateView(float dt);
+		void UpdateViewX(float dt);
+		void UpdateViewY(float dt);
         virtual ~Map();
 		void loadMap();
     private:

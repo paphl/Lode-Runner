@@ -20,16 +20,17 @@ std::unique_ptr<Unit> Enemy::clone()
 
 void Enemy::pickUpGold(std::vector<Tile*>& tiles)
 {
-	/*for (int i = 0; i < tiles.size(); i++)
+	for (int i = 0; i < tiles.size(); i++)
 	{
 		if (tiles[i]->getTileType() == "Gold" && this->isColliding(tiles[i]->getGlobalBounds()) && goldCounter < 1 && tiles[i]->getIsVisible())
 		{
 			goldCounter++;
+			carriedGold = tiles[i];
 			tiles[i]->setIsVisible(false);
 			//hide the gold sprite
 			//gold sprite drops when trapped by unit and is put on top of the enemy
 		}
-	}*/
+	}
 }
 
 void Enemy::choosePath(std::vector<Tile*>& tiles)
@@ -60,12 +61,42 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 		}
 		
 	}
+	direction = 3;
 
-		
+	Tile* trapTile = isFallingToTrap(tiles);
+	float del = sf::seconds(4.0f).asSeconds();
+	float test = timeTrapped.getElapsedTime().asSeconds();
+	if (isTrapped && test > del)
+	{
+		if (!trapTile->getIsVisible())
+		{
+			this->setPosition(sf::Vector2f(this->getGlobalBounds().left + 10.0f, this->getGlobalBounds().top - Constants::SIZE_OF_TILE));
+			isTrapped = false;
+			return;
+		}
+		else
+		{
+			isVisible = false;
+			return;
+		}
+
+	}
+
 	if (this->getIsFalling())
 	{
 		if (!this->GravityPull(tiles) && !this->getOnRope())
 		{
+		
+			if (isTrapped && this->getGlobalBounds().top >= trapTile->getGlobalBounds().top)
+			{
+				if (this->getGoldCounter() == 1)
+				{
+					carriedGold->setPosition(sf::Vector2f(this->getGlobalBounds().left, this->getGlobalBounds().top - Constants::SIZE_OF_TILE));
+				}
+				dir.y += 0.0f;
+				this->setIsFalling(false);
+				return;
+			}
 			dir = sf::Vector2f(0, 0);
 			dir.y += 1.0f;
 			this->SetDirection(dir);
@@ -78,6 +109,7 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 			this->setIsFalling(false);
 		}
 	}
+	
 		if (direction == 0) //left
 		{
 			dir.x -= 1;
@@ -234,9 +266,15 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 	}
 		
 		this->SetDirection(dir);
-
+		
 		if (!this->GravityPull(tiles) && !this->getOnRope())
 		{
+			if (this->isTrapped && this->getGlobalBounds().top > trapTile->getGlobalBounds().top)
+			{
+				dir.y += 0.0f;
+				this->setIsFalling(false);
+				return;
+			}
 			//dir = sf::Vector2f(0, 0);
 			dir.y += 1.0f;
 			this->SetDirection(dir);
@@ -248,4 +286,20 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 			dir.y += 0.0f;
 			this->setIsFalling(false);
 		}
+}
+
+
+Tile* Enemy::isFallingToTrap(std::vector<Tile*>& tiles)
+{
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		if (this->isColliding(tiles[i]->getGlobalBounds(), -4.0f) && tiles[i]->getTileType() == "Dirt" && !tiles[i]->getIsVisible())
+		{
+			if(!isTrapped)
+				timeTrapped.restart();
+			isTrapped = true;
+			return tiles[i];
+		}
+	}
+	isTrapped = false;
 }

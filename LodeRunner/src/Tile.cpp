@@ -42,7 +42,7 @@ sf::FloatRect Tile::getGlobalBounds() const
 
 const bool  Tile::getIsBlocking()
 {
-	return canDestroy;
+	return isBlocking;
 }
 
 bool Tile::getIsVisible()

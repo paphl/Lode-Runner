@@ -43,24 +43,24 @@ void Map::loadMap()
 		{
 			switch ((*ptr)[i])
 			{
-			case '+':
+			case '+': //hero
 				hero = unitFactory.createUnit(UnitType::HERO);
 				hero->setPosition(sf::Vector2f(posX, posY));
-				view.setCenter(units.back()->getPosition()); //set starting pos of the view equal to hero
+				view.setCenter(sf::Vector2f(posX, posY)); //set starting pos of the view equal to hero
 				break;
-			case '-':
+			case '-': //enemy
 				units.push_back(unitFactory.createUnit(UnitType::ENEMY));
 				units.back()->setPosition(sf::Vector2f(posX, posY));
 				break;
-			case 'H':
+			case 'H': //ladder
 				tiles.push_back(TileFactory::createTile(TILE_TYPE::LADDER, posX, posY));
 				break;
-			case 'h':
+			case 'h': //ladder to goal
 				tiles.push_back(TileFactory::createTile(TILE_TYPE::LADDER, posX, posY));
 				tiles.back()->setIsVisible(false);
 				ladderToNextLevel.push_back(tiles.back());
 				break;
-			case '$':
+			case '$': //gold
 				tiles.push_back(TileFactory::createTile(TILE_TYPE::GOLD, posX, posY));
 				goldCounter++;
 				break;
@@ -87,6 +87,11 @@ void Map::loadMap()
 		posX = 0.0f;
 		posY += Constants::SIZE_OF_TILE;
 	}
+	for (int i = 0; i < vRow.back().size(); i++)
+	{
+		tiles.push_back(TileFactory::createTile(TILE_TYPE::STONE, posX, posY));
+		posX += Constants::SIZE_OF_TILE;
+	}
 	mapSize.y = posY;
 }
 
@@ -105,6 +110,7 @@ void Map::Draw(float dt)
 	std::vector<std::unique_ptr<Unit>>::iterator ptrUnits;
 	for (ptrUnits = units.begin(); ptrUnits < units.end(); ptrUnits++)
 	{
+		if ((*ptrUnits)->getIsVisible())
 		(*ptrUnits)->Draw(this->_data->window);
 	}
 
@@ -360,8 +366,8 @@ void Map::Update(float dt)
 
 	hero->pickUpGold(tiles);//hero if unit while moving picks up any gold
 
-	UpdateView(dt); //always after updating the hero
-
+	UpdateViewX(dt); //always after updating the hero
+	UpdateViewY(dt);
 	//end of hero falling 
 
 	std::vector<Tile*>::iterator ptrTiles;
@@ -430,7 +436,7 @@ void Map::Update(float dt)
 	}
 }
 
-void Map::UpdateView(float dt)
+void Map::UpdateViewX(float dt)
 {
 	sf::Vector2f dir = { 0.0f, 0.0f }; // used to move view
 
@@ -439,12 +445,12 @@ void Map::UpdateView(float dt)
 	//checks for left movement
 	if (hero->getPosition().x < view.getCenter().x - (view.getSize().x / 4.0f)  ) //checks ifhero is out of desired bound move camera only if camera most left corner is not 0
 	{
-		dir.x -= 2.5f;
+		dir.x -= 2.0f;
 	}
 	//checks for right movement
 	else if (hero->getPosition().x > view.getCenter().x + (view.getSize().x / 4.0f)) //checks ifhero is out of desired bound move camera only if camera most left corner is not 0
 	{
-		dir.x += 2.5f;
+		dir.x += 2.0f;
 	}
 
 	sf::Vector2f vel = dir * 100.0f;
@@ -463,3 +469,21 @@ void Map::UpdateView(float dt)
 	this->_data->window.setView(view);
 }
 
+void Map::UpdateViewY(float dt)
+{
+	sf::Vector2f dir = { 0.0f, 0.0f }; // used to move view
+
+	if (hero->getPosition().y < view.getCenter().y - (view.getSize().y / 3.0f)) //checks ifhero is out of desired bound move camera only if camera most left corner is not 0
+	{
+		dir.y -= 2.0f;
+	}
+	//checks for right movement
+	else if (hero->getPosition().y > view.getCenter().y + (view.getSize().y / 3.0f)) //checks ifhero is out of desired bound move camera only if camera most left corner is not 0
+	{
+		dir.y += 2.0f;
+	}
+	sf::Vector2f vel = dir * 100.0f;
+	view.move(vel * dt);
+
+	this->_data->window.setView(view);
+}
