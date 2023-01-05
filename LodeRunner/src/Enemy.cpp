@@ -207,7 +207,7 @@ void Enemy::choosePath(std::vector<Tile*>& tiles)
 					{
 						if ((*itrTiles)->getIsBlocking() &&
 							this->getGlobalBounds().top + this->getGlobalBounds().height + 3.0f > (*itrTiles)->getGlobalBounds().top &&
-							this->getGlobalBounds().top < (*itrTiles)->getGlobalBounds().top &&
+							//this->getGlobalBounds().top < (*itrTiles)->getGlobalBounds().top &&
 							this->getPosition().x >(*itrTiles)->getPosition().x - 36.0f &&
 							this->getPosition().x < (*itrTiles)->getPosition().x + 36.0f)
 						{
